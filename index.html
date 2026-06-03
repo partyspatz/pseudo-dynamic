@@ -1,142 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pseudodynamic Website Directory</title>
-    <style>
-      body {
-        font-family: Georgia, 'Times New Roman', serif;
-        background-color: #f8f5f2;
-        color: #333;
-        max-width: 700px;
-        margin: auto;
-        padding: 3em 1.5em;
-        line-height: 1.6;
-        position: relative;
-      }
+  <meta charset="UTF-8">
+  <title>Moses Zacuto Manuscript Collection</title>
+  <style>
+  :root {
+    --ivory: #fffdf7;
+    --ivory-card: #fffefb;
+    --cobalt: #0047ab;
+    --cobalt-light: #d8e4ff;
+    --anthracite: #2b2b2b;
+    --anthracite-light: #555555;
+    --border: #ece6d8;
+    --shadow: rgba(0, 0, 0, 0.04);
+  }
 
-      h1 {
-        font-size: 2em;
-        margin-bottom: 1em;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 0.3em;
-      }
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: var(--ivory);
+    color: var(--anthracite);
+    margin: 0;
+    padding: 2rem;
+  }
 
-      p {
-        margin-bottom: 2em;
-      }
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cobalt);
+    border-bottom: 2px solid var(--cobalt-light);
+    padding-bottom: 0.5rem;
+    letter-spacing: 0.03em;
 
-      a {
-        text-decoration: none;
-        color: #0066cc;
-        font-weight: bold;
-        transition: color 0.3s ease;
-      }
+    /* Dezenter Schatten */
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  }
 
-      a:hover {
-        color: #004499;
-      }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.8rem;
+  }
 
-      ul {
-        list-style: none;
-        padding: 0;
-      }
+  .card {
+    background-color: var(--ivory-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
+  }
 
-      li {
-        background: #fff;
-        padding: 1em;
-        margin-bottom: 1em;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-        transition: transform 0.2s ease;
-      }
+  .card:hover {
+    transform: translateY(-2px);
+  }
 
-      li:hover {
-        transform: translateY(-2px);
-      }
+  .card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 1px solid var(--border);
+  }
 
-      .no-link {
-        color: #aaa;
-        text-decoration: line-through;
-        cursor: not-allowed;
-        font-style: italic;
-      }
+  .card-content {
+    padding: 1rem;
+    background-color: var(--ivory-card);
+  }
 
-      /* New CSS for the home icon */
-      .home-link {
-        position: absolute;
-        top: 1em;
-        left: -100px; /* Move it outside the left margin */
-      }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cobalt);
+    margin-bottom: 0.4rem;
+  }
 
-      .home-link img {
-        width: 88px;
-        height: auto;
-        border-radius: 4px;
-        cursor: pointer;
-        background-color: #fff;
-        box-shadow: 0 0 5px rgba(0,0,0,0.2);
-      }
+  .card-description {
+    font-size: 0.8rem;
+    color: var(--anthracite-light);
+    line-height: 1.5;
+  }
 
-      .home-link img:hover {
-        box-shadow: 0 0 8px rgba(0,0,0,0.3);
-      }
-    </style>
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  a:hover .card-title {
+    color: #003380;
+  }
+</style>
 </head>
 <body>
-  <!-- Home icon link -->
-  <a class="home-link" href="https://14143-dh-sustainability.github.io">
-    <img src="poster_small.png" alt="Home" />
-  </a>
-  
-  <h1>Pseudodynamic Website Directory</h1>
-
-  <p>
-    <a href="https://docs.google.com/spreadsheets/d/1VBVZlviaFWJ0L2JX4A2HyWmc30UwDqUTb3RlgLkORWA/edit?usp=sharing" target="_blank">
-        ➕ Add your website to the list
-    </a>
-  </p>
-
-  <ul id="link-list"></ul>
+  <h1>Moses Zacuto Manuscript Collection</h1>
+  <div class="gallery" id="gallery"></div>
 
   <script>
-    // const jsonUrl = "https://api.sheetbest.com/sheets/0cd08c73-9ea2-49d1-8f83-e8652144cce5";
-    // const jsonUrl = "https://opensheet.elk.sh/1VBVZlviaFWJ0L2JX4A2HyWmc30UwDqUTb3RlgLkORWA/1";
-    const jsonUrl = "./website_directories.json";
+    let objects = [];
 
-    fetch(jsonUrl)
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.json();
-      })
+    // const endpoint = 'https://api.sheetbest.com/sheets/f90fc378-8e9a-4850-9783-c500e6b6dbdd';
+    const endpoint = "https://opensheet.elk.sh/1zYkKB1y4h77lWWlbqKme13OoYWkIS0jGqvTDYzKikl0/1";
+   
+
+    fetch(endpoint)
+      .then(response => response.json())
       .then(data => {
-        const list = document.getElementById("link-list");
-
         data.forEach(item => {
-          if (item.Directory !== 'pseudodynamic') return; // Skip all items from other homeworks
-          
-          const li = document.createElement("li");
-
-          if (item.Website) {
-            const link = document.createElement("a");
-            link.href = item.Website;
-            link.textContent = item.Name;
-            link.target = "_blank";
-            li.appendChild(link);
-          } else {
-            const span = document.createElement("span");
-            span.textContent = item.Name;
-            span.className = "no-link";
-            li.appendChild(span);
-          }
-
-          list.appendChild(li);
+          objects.push({
+            title: item.Title,
+            nameenglish: item.NameEnglish,
+            namehebrew: item.NameHebrew,
+            author: item.Author,
+            date: item.Date,
+            image: item.Image,
+          });
         });
+        renderGallery();
       })
-      .catch(error => {
-        console.error("Error fetching JSON:", error);
+      .catch(error => console.error('Error fetching data:', error));
+    
+    function renderGallery() {
+      const gallery = document.getElementById("gallery");
+
+      objects.forEach(obj => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <a href="${obj.link}" target="_blank">
+            <img src="${obj.image}" alt="${obj.title}">
+            <div class="card-content">
+              <div class="card-title">${obj.title}</div>
+              <div class="card-title">${obj.nameenglish}</div>
+              <div class="card-title">${obj.namehebrew}</div>
+              <div class="card-description">${obj.author}</div>
+              <div class="card-description">${obj.date}</div>
+            </div>
+          </a>
+        `;
+
+        gallery.appendChild(card);
       });
+    }
   </script>
 </body>
 </html>
