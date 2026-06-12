@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Moses Zacuto Manuscript Collection</title>
-  <style>
+ 
+ <style>
   :root {
     --ivory: #fffdf7;
     --ivory-card: #fffefb;
@@ -91,10 +92,33 @@
   a:hover .card-title {
     color: #003380;
   }
+ .video-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 3rem 0;
+}
+
+.video-container iframe {
+  width: 900px;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+} 
 </style>
 </head>
 <body>
   <h1>Moses Zacuto Manuscript Collection</h1>
+  
+  <div class="video-container">
+    <iframe
+      src="https://youtu.be/RntGPBOQKi4?si=sU4kmTcIOvZzxOMG"
+      title="3D Animation of kabbalistic sefirotic tree"
+      allowfullscreen>
+    </iframe>
+  </div>
+
   <div class="gallery" id="gallery"></div>
 
   <script>
